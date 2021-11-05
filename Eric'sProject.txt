@@ -1,0 +1,11 @@
+Eric's Game
+
+Genre - First person shooter
+Mechanics - Different guns/ammo
+Type of Game - 3D
+
+
+Next week:
+Rotating our player
+Change how we move
+Shoot something
