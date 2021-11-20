@@ -21,13 +21,17 @@ public class PlayerScript : MonoBehaviour
     public GameObject Bullet; // a prefab of our bullet
     public float BulletForce; // how fast the bullet will travel
     public Transform ShootingPosition; // where the bullet comes from
+    public ParticleSystem GunBlast; // reference to the particle system
+    // Ammo counting
+    public float MaxAmmo;
+    public float CurrentAmmo;
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // freezes our mouse position to the center of the screen
         rb = GetComponent<Rigidbody>();
-        
+        GunBlast.Stop();
     }
 
     // Update is called once per frame
@@ -36,6 +40,14 @@ public class PlayerScript : MonoBehaviour
         Move();
         PlayerRotate();
         Shoot();
+        Reload();
+
+        // when we want to reset our rotation
+        if (Input.GetKeyDown("z"))
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
     }
 
     void Move() // our movement inputs
@@ -61,24 +73,26 @@ public class PlayerScript : MonoBehaviour
         //    transform.Translate(transform.right * moveSpeed * Time.deltaTime);
         //}
 
-        float horizontal = Input.GetAxis("Horizontal"); // store our horizontal input
-        float vertical = Input.GetAxis("Vertical"); // store our vertical input
-        MoveDirection = transform.forward * vertical + transform.right * horizontal; // apply those to our move direction
+        float horizontal = Input.GetAxisRaw("Horizontal"); // store our horizontal input
+        float vertical = Input.GetAxisRaw("Vertical"); // store our vertical input
+        MoveDirection = (transform.forward * vertical) + (transform.right * horizontal); // apply those to our move direction
         Vector3 force = MoveDirection * (moveSpeed * Time.deltaTime); // create a force using move speed and our new direction
         transform.position += force; // apply all of that to our position
+        
 
         if (Input.GetKeyDown("space") && isJumping == false) // jumping
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); // 0, 1, 0
             isJumping = true;
         }
+        
     }
 
     void PlayerRotate()
     {
-        float mouseX = Input.GetAxis("Mouse X"); // holds our x mouse position
+        float mouseX = Input.GetAxisRaw("Mouse X"); // holds our x mouse position
         yRotation = mouseX * horizontalSpeed * Time.deltaTime; // our new y rotation
-        float mouseY = Input.GetAxis("Mouse Y"); // holds our new y mouse position
+        float mouseY = Input.GetAxisRaw("Mouse Y"); // holds our new y mouse position
         xRotation = mouseY * verticalSpeed * Time.deltaTime; // our new x rotation
 
         Vector3 PlayerRotation = transform.rotation.eulerAngles; // making a local variable to hold our current rotation
@@ -89,10 +103,20 @@ public class PlayerScript : MonoBehaviour
 
     void Shoot()
     {
-        if (Input.GetMouseButtonDown(0)) // when we left click
+        if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0) // when we left click
         {
             GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
+            GunBlast.Play();
+            CurrentAmmo--;
+        }
+    }
+
+    void Reload()
+    {
+        if (Input.GetKeyDown("r"))
+        {
+            CurrentAmmo = MaxAmmo;
         }
     }
 
