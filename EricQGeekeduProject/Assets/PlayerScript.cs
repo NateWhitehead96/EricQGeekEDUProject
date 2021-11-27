@@ -26,6 +26,8 @@ public class PlayerScript : MonoBehaviour
     public float MaxAmmo;
     public float CurrentAmmo;
 
+    private int Health = 3;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -123,6 +125,20 @@ public class PlayerScript : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isJumping = false;
+
+        if (collision.gameObject.CompareTag("Enemy")) // if the thing we're hitting is an enemy
+        {
+            Health--; // subtract 1 health
+            if(Health <= 0)
+            {
+                print("I am dead");
+            }
+        }
+    }
+
+    public int GetMyHealth()
+    {
+        return Health;
     }
 
 }
