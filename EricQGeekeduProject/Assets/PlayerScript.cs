@@ -28,6 +28,8 @@ public class PlayerScript : MonoBehaviour
 
     private int Health = 3;
 
+    public Animator animator; // our animator reference
+
     // Start is called before the first frame update
     void Start()
     {
@@ -87,6 +89,15 @@ public class PlayerScript : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); // 0, 1, 0
             isJumping = true;
         }
+
+        if(force.x > 0 || force.y > 0 || force.z > 0) // when we're moving set walking to true
+        {
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
         
     }
 
@@ -110,7 +121,12 @@ public class PlayerScript : MonoBehaviour
             GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
             GunBlast.Play();
+            animator.SetBool("isShooting", true);
             CurrentAmmo--;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            animator.SetBool("isShooting", false);
         }
     }
 
@@ -118,8 +134,17 @@ public class PlayerScript : MonoBehaviour
     {
         if (Input.GetKeyDown("r"))
         {
-            CurrentAmmo = MaxAmmo;
+            //CurrentAmmo = MaxAmmo;
+            StartCoroutine(ReloadAction());
         }
+    }
+
+    IEnumerator ReloadAction() // reloading and we wait some time while reloading
+    {
+        animator.SetBool("isReloading", true);
+        yield return new WaitForSeconds(0.5f);
+        CurrentAmmo = MaxAmmo;
+        animator.SetBool("isReloading", false);
     }
 
     private void OnCollisionEnter(Collision collision)
