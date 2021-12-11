@@ -6,6 +6,9 @@ public class BulletScript : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if (!collision.gameObject.CompareTag("Player")) // if we're colliding with things at are not the player ! = not
+        {
+            Destroy(gameObject);
+        }
     }
 }

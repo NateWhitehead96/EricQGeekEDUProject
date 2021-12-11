@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -50,6 +51,11 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKeyDown("z"))
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+        if (Health <= 0) // when we die go to game over
+        {
+            SceneManager.LoadScene("GameOver");
         }
 
     }

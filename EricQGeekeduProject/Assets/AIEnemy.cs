@@ -14,7 +14,7 @@ public class AIEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        PlayerPosition = FindObjectOfType<PlayerScript>().transform; // this will ensure the ai always have the players transform
     }
 
     // Update is called once per frame

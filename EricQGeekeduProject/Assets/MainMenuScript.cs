@@ -9,4 +9,10 @@ public class MainMenuScript : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+    [SerializeField]
+    public void QuitGame()
+    {
+        Application.Quit(); // this only closes the game when the game is a stand alone build
+    }
 }
