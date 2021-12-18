@@ -23,6 +23,8 @@ public class PlayerScript : MonoBehaviour
     public float BulletForce; // how fast the bullet will travel
     public Transform ShootingPosition; // where the bullet comes from
     public ParticleSystem GunBlast; // reference to the particle system
+    public bool reloading; // keeps track of our reloading
+
     // Ammo counting
     public float MaxAmmo;
     public float CurrentAmmo;
@@ -122,7 +124,7 @@ public class PlayerScript : MonoBehaviour
 
     void Shoot()
     {
-        if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0) // when we left click
+        if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0 && reloading == false) // when we left click
         {
             GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
@@ -138,7 +140,7 @@ public class PlayerScript : MonoBehaviour
 
     void Reload()
     {
-        if (Input.GetKeyDown("r"))
+        if (Input.GetKeyDown("r") && CurrentAmmo < MaxAmmo) // if we press r and we have fired any bullets we can reload
         {
             //CurrentAmmo = MaxAmmo;
             StartCoroutine(ReloadAction());
@@ -148,9 +150,11 @@ public class PlayerScript : MonoBehaviour
     IEnumerator ReloadAction() // reloading and we wait some time while reloading
     {
         animator.SetBool("isReloading", true);
+        reloading = true;
         yield return new WaitForSeconds(0.5f);
         CurrentAmmo = MaxAmmo;
         animator.SetBool("isReloading", false);
+        reloading = false;
     }
 
     private void OnCollisionEnter(Collision collision)
