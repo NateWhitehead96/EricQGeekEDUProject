@@ -33,9 +33,12 @@ public class PlayerScript : MonoBehaviour
 
     public Animator animator; // our animator reference
 
+    public GameObject PauseCanvas; // a reference to our pause canvas
+
     // Start is called before the first frame update
     void Start()
     {
+        PauseCanvas.SetActive(false); // make sure our pause canvas is inactive to start
         Cursor.lockState = CursorLockMode.Locked; // freezes our mouse position to the center of the screen
         rb = GetComponent<Rigidbody>();
         GunBlast.Stop();
@@ -60,6 +63,28 @@ public class PlayerScript : MonoBehaviour
             SceneManager.LoadScene("GameOver");
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (PauseCanvas.activeInHierarchy) // pause canvas is on the screen
+            {
+                Time.timeScale = 1;
+                PauseCanvas.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Time.timeScale = 0;
+                PauseCanvas.SetActive(true);
+                Cursor.lockState = CursorLockMode.None; // we're not going to lock our mouse to the middle of the screen
+            }
+        }
+
+    }
+
+    public void SetHealth(int damage) // using a setter for our private health variable
+    {
+        Health -= damage;
+        print(Health);
     }
 
     void Move() // our movement inputs
@@ -123,8 +148,8 @@ public class PlayerScript : MonoBehaviour
     }
 
     void Shoot()
-    {
-        if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0 && reloading == false) // when we left click
+    {        //left mouse button clicked   ammo is more than 0 we arent reloading    pause canvas is not showing
+        if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0 && reloading == false && PauseCanvas.activeInHierarchy == false) // when we left click
         {
             GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
