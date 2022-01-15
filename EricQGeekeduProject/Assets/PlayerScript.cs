@@ -35,6 +35,8 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject PauseCanvas; // a reference to our pause canvas
 
+    public AudioSource shootSound; // a reference to the sound we make when shooting
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +44,7 @@ public class PlayerScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked; // freezes our mouse position to the center of the screen
         rb = GetComponent<Rigidbody>();
         GunBlast.Stop();
+        shootSound.Stop();
     }
 
     // Update is called once per frame
@@ -154,6 +157,7 @@ public class PlayerScript : MonoBehaviour
             GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
             GunBlast.Play();
+            shootSound.Play();
             animator.SetBool("isShooting", true);
             CurrentAmmo--;
         }

@@ -11,10 +11,13 @@ public class AIEnemy : MonoBehaviour
 
     public int Health; // how many hits the enemy can take
 
+    public AudioSource enemyHurtSound;
+
     // Start is called before the first frame update
     void Start()
     {
         PlayerPosition = FindObjectOfType<PlayerScript>().transform; // this will ensure the ai always have the players transform
+        enemyHurtSound = FindObjectOfType<SoundManager>().enemyHurtSound; // assign the hurt sound to our enemy dynamically
     }
 
     // Update is called once per frame
@@ -29,6 +32,7 @@ public class AIEnemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet")) // is the thing we're colliding with is a bullet
         {
             Health -= 1;
+            enemyHurtSound.Play();
             Destroy(collision.gameObject); // this will destory the bullet
             if(Health <= 0) // if the enemies health is 0 or less than 0 destory it
             {

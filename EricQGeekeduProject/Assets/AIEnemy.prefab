@@ -152,3 +152,4 @@ MonoBehaviour:
   nav: {fileID: 9072701883686314845}
   PlayerPosition: {fileID: 0}
   Health: 3
+  enemyHurtSound: {fileID: 6001065881007152028, guid: 7ab53a19cf76fd44cae63847b98cfd0e, type: 3}
