@@ -190,14 +190,14 @@ public class PlayerScript : MonoBehaviour
     {
         isJumping = false;
 
-        if (collision.gameObject.CompareTag("Enemy")) // if the thing we're hitting is an enemy
-        {
-            Health--; // subtract 1 health
-            if(Health <= 0)
-            {
-                print("I am dead");
-            }
-        }
+        //if (collision.gameObject.CompareTag("Enemy")) // if the thing we're hitting is an enemy
+        //{
+        //    Health--; // subtract 1 health
+        //    if(Health <= 0)
+        //    {
+        //        print("I am dead");
+        //    }
+        //}
     }
 
     public int GetMyHealth()
