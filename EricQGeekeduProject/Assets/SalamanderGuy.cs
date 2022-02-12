@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum State
+{
+    Patrol,
+    Seek
+}
+
 public class SalamanderGuy : MonoBehaviour
 {
     public Animator animator; // be our animation controller
@@ -16,17 +22,45 @@ public class SalamanderGuy : MonoBehaviour
     public int health; // for the health of the enemy
 
     public Vector3 offsetRotation;
+    // state machine stuff
+    public State state; // what state the enemy is in
+    public Transform[] patrolPoints; // the points we can patrol to
+    public int currentPoint; // the current point we're going to based on index
+    public LayerMask layer; 
     // Start is called before the first frame update
     void Start()
     {
         Player = FindObjectOfType<PlayerScript>().transform; // find the player 
-        hurtSound = FindObjectOfType<SoundManager>().enemyHurtSound;
+        //hurtSound = FindObjectOfType<SoundManager>().enemyHurtSound;
     }
 
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(Player.position); // make it walk towards the player
+        if(state == State.Patrol)
+        {
+            agent.SetDestination(patrolPoints[currentPoint].position); // moving to current patrol point
+            if(agent.destination == transform.position)// when the agent reaches the checkpoint
+            {
+                currentPoint++; // go to next point
+                if(currentPoint >= patrolPoints.Length) // if the current point is outside of the range
+                {
+                    currentPoint = 0; // reset to 0
+                }
+            }
+        }
+        RaycastHit hit; // the thing hit by our raycast
+        if(Physics.Raycast(transform.position, Vector3.forward, out hit, 10, layer)) // firing a raycast from the objects position, forward, 10 pixel on the player layer
+        {
+            print("working?");
+            if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                state = State.Seek; // seek player
+            }
+        }
+
+
+        //agent.SetDestination(Player.position); // make it walk towards the player
         //transform.rotation = Quaternion.Euler(transform.rotation.x + offsetRotation.x, transform.rotation.y + offsetRotation.y, transform.rotation.z + offsetRotation.z);
         walking = true;
         animator.SetBool("isWalking", walking);
