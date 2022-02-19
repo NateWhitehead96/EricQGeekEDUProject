@@ -26,7 +26,9 @@ public class SalamanderGuy : MonoBehaviour
     public State state; // what state the enemy is in
     public Transform[] patrolPoints; // the points we can patrol to
     public int currentPoint; // the current point we're going to based on index
-    public LayerMask layer; 
+    public LayerMask layer;
+
+    public EnemyLineOfSight los; // the enemies line of sight
     // Start is called before the first frame update
     void Start()
     {
@@ -49,14 +51,16 @@ public class SalamanderGuy : MonoBehaviour
                 }
             }
         }
-        RaycastHit hit; // the thing hit by our raycast
-        if(Physics.Raycast(transform.position, Vector3.forward, out hit, 10, layer)) // firing a raycast from the objects position, forward, 10 pixel on the player layer
+        if(los.playerInSight == true) // firing a box collider in front
         {
             print("working?");
-            if (hit.collider.gameObject.CompareTag("Player"))
-            {
-                state = State.Seek; // seek player
-            }
+            
+            state = State.Seek; // seek player
+            
+        }
+        if(state == State.Seek)
+        {
+            agent.SetDestination(Player.position);
         }
 
 
