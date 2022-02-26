@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum Gun
+{
+    BulletGun,
+    LaserGun
+}
+
 public class PlayerScript : MonoBehaviour
 {
+    public Gun currentGun; // this knows what gun we are currently holding
+
     public int moveSpeed = 5; // this will be how fast we move
     public Rigidbody rb; // this is a reference to our rigidbody
     public int jumpForce = 50; // this is the jump force
@@ -37,6 +45,7 @@ public class PlayerScript : MonoBehaviour
 
     public AudioSource shootSound; // a reference to the sound we make when shooting
 
+    public LaserBeam beam; // new projectile, the laserbeam
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +63,7 @@ public class PlayerScript : MonoBehaviour
         PlayerRotate();
         Shoot();
         Reload();
+        SwitchGun();
 
         // when we want to reset our rotation
         if (Input.GetKeyDown("z"))
@@ -151,19 +161,49 @@ public class PlayerScript : MonoBehaviour
     }
 
     void Shoot()
-    {        //left mouse button clicked   ammo is more than 0 we arent reloading    pause canvas is not showing
-        if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0 && reloading == false && PauseCanvas.activeInHierarchy == false) // when we left click
+    {
+        if (currentGun == Gun.BulletGun)
         {
-            GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
-            newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
-            GunBlast.Play();
-            shootSound.Play();
-            animator.SetBool("isShooting", true);
-            CurrentAmmo--;
+            //left mouse button clicked   ammo is more than 0 we arent reloading    pause canvas is not showing
+            if (Input.GetMouseButtonDown(0) && CurrentAmmo > 0 && reloading == false && PauseCanvas.activeInHierarchy == false) // when we left click
+            {
+                GameObject newBullet = Instantiate(Bullet, ShootingPosition.position, transform.rotation); // make a new bullet at the bullet shoot position with players rotation
+                newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * BulletForce); // give force to bullet
+                GunBlast.Play();
+                shootSound.Play();
+                animator.SetBool("isShooting", true);
+                CurrentAmmo--;
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                animator.SetBool("isShooting", false);
+            }
         }
-        if (Input.GetMouseButtonUp(0))
+        if(currentGun == Gun.LaserGun)
         {
-            animator.SetBool("isShooting", false);
+            if (Input.GetMouseButton(0) && CurrentAmmo > 0 && reloading == false && PauseCanvas.activeInHierarchy == false)
+            {
+                beam.FireLaser();
+                beam.beam.enabled = true; // show the laser
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                beam.beam.enabled = false; // disable the laserbeam
+            }
+        }
+    }
+
+    void SwitchGun()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            // when we press the 1 key equip the bullet gun
+            currentGun = Gun.BulletGun;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            // when we press the 2 key equip the laser gun
+            currentGun = Gun.LaserGun;
         }
     }
 
