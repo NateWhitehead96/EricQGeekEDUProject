@@ -37,7 +37,7 @@ public class PlayerScript : MonoBehaviour
     public float MaxAmmo;
     public float CurrentAmmo;
 
-    private int Health = 3;
+    public int Health = 3;
 
     public Animator animator; // our animator reference
 
@@ -230,14 +230,7 @@ public class PlayerScript : MonoBehaviour
     {
         isJumping = false;
 
-        //if (collision.gameObject.CompareTag("Enemy")) // if the thing we're hitting is an enemy
-        //{
-        //    Health--; // subtract 1 health
-        //    if(Health <= 0)
-        //    {
-        //        print("I am dead");
-        //    }
-        //}
+        
     }
 
     public int GetMyHealth()

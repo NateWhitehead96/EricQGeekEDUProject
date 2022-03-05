@@ -27,12 +27,12 @@ public class LaserBeam : MonoBehaviour
     {
         beam.SetPosition(0, shootPosition.position); // the start of the line
         mousePosition = Input.mousePosition; // set the mouse position
-        mousePosition.z = 100f;
+        mousePosition.z = 1000f;
         endPoint = Camera.main.ScreenToWorldPoint(mousePosition); // this is the end position
         beam.SetPosition(1, endPoint); // set that position for the beam
 
         RaycastHit hit; // the raycast (invisible laserbeam) that will detects whatever the laser hits
-        if(Physics.Raycast(shootPosition.position, endPoint, out hit, 100))
+        if(Physics.Raycast(shootPosition.position, endPoint, out hit, 1000))
         {
             print(hit.collider.gameObject); // for now just print what we hit with the laser
             if (hit.collider.gameObject.CompareTag("Enemy"))
