@@ -15,11 +15,20 @@ public class FireBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(MoveLocation * Time.deltaTime);
+        //transform.Translate(MoveLocation * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, MoveLocation, moveSpeed * Time.deltaTime); // move fix
+        if(transform.position == MoveLocation) // optional, but will destroy the fireball when it gets to its destination
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         //Destroy(gameObject); // once it touches anything destroy for now
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerScript>().Health--;
+        }
     }
 }

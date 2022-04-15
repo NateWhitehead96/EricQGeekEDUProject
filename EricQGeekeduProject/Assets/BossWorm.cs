@@ -20,10 +20,14 @@ public class BossWorm : MonoBehaviour
 
     public GameObject Fireball; // the fire ball it'll fire
     public float timer; // help with giving the boss an order to slam or spit fire
+    public Transform ShootPosition; // where the fireballz will come out
+
+    public BoxCollider box;
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>(); // link the naimator on the gameobject to the script
+        box.enabled = false; // make sure the box doesnt hurt the player on start
         HealthBar.maxValue = health; // set the max hp
         BossCanvas.SetActive(false); // hide health until we want to show it
     }
@@ -56,14 +60,17 @@ public class BossWorm : MonoBehaviour
     IEnumerator BossSlam()
     {
         slam = true;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
+        box.enabled = true;
+        yield return new WaitForSeconds(1);
+        box.enabled = false;
         slam = false;
         timer = 0;
     }
     IEnumerator BossFire()
     {
         fire = true;
-        GameObject newFireball = Instantiate(Fireball, transform.position, transform.rotation);
+        GameObject newFireball = Instantiate(Fireball, ShootPosition.position, ShootPosition.rotation);
         newFireball.GetComponent<FireBall>().MoveLocation = player.position; // this makes fire move
         yield return new WaitForSeconds(3);
         fire = false;
@@ -79,6 +86,17 @@ public class BossWorm : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+        }
+        //if (collision.gameObject.CompareTag("Player"))
+        //{
+        //    collision.gameObject.GetComponent<PlayerScript>().Health--;
+        //}
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerScript>().Health--;
         }
     }
 }
