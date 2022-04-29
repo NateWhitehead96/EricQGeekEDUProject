@@ -76,7 +76,7 @@ public class PlayerScript : MonoBehaviour
             SceneManager.LoadScene("GameOver");
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
         {
             if (PauseCanvas.activeInHierarchy) // pause canvas is on the screen
             {
