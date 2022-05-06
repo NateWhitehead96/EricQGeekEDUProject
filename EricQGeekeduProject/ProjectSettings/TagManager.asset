@@ -7,6 +7,7 @@ TagManager:
   - Bullet
   - Enemy
   - Key
+  - KeyPad
   layers:
   - Default
   - TransparentFX
