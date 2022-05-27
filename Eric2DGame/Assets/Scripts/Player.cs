@@ -11,10 +11,13 @@ public class Player : MonoBehaviour
 
     public bool isJumping; // to know if the player is jumping or not
     public bool isRunning; // to know if the player is running/sprinting
+
+    public Animator animator; // link to the animation controller
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // makes sure we link our rigidbody to rb
+        animator = GetComponent<Animator>(); // make sure to link animator to this obejcts animator
     }
 
     // Update is called once per frame
@@ -26,6 +29,7 @@ public class Player : MonoBehaviour
 
     public void Move()
     {
+        animator.SetBool("isWalking", isRunning); // handle the movement for our animation
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             isRunning = true;
@@ -39,10 +43,12 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             transform.Translate(Vector3.right * moveSpeed * Time.deltaTime); // moves us right
+            isRunning = true; // to fix
         }
         if(Input.GetKey(KeyCode.A))
         {
             transform.Translate(Vector3.left * moveSpeed * Time.deltaTime); // move us left
+            isRunning = true; // to fix
         }
     }
 
