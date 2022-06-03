@@ -7,6 +7,9 @@ public class Gun : MonoBehaviour
     public Transform player; // need access to the parent player
 
     public Vector2 mousePosition;
+    // shooting
+    public Transform shootPos; // shoot position
+    public GameObject Bullet; // bullet
     // Start is called before the first frame update
     void Start()
     {
@@ -32,5 +35,13 @@ public class Gun : MonoBehaviour
             player.localScale = new Vector3(2, 2, 1);
             transform.localScale = new Vector3(0.2f, .2f);
         }
+
+        // Shoot controls
+        if (Input.GetMouseButtonDown(0)) // when we left click
+        {
+            GameObject newBullet = Instantiate(Bullet, shootPos.position, shootPos.rotation); // spawn the bullet
+            newBullet.GetComponent<Rigidbody2D>().AddForce(shootPos.right * 10, ForceMode2D.Impulse); // apply force to bullet
+        }
+
     }
 }
