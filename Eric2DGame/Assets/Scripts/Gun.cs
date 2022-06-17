@@ -10,6 +10,7 @@ public class Gun : MonoBehaviour
     // shooting
     public Transform shootPos; // shoot position
     public GameObject Bullet; // bullet
+    public int ammo; // how much ammo we have
     // Start is called before the first frame update
     void Start()
     {
@@ -37,8 +38,9 @@ public class Gun : MonoBehaviour
         }
 
         // Shoot controls
-        if (Input.GetMouseButtonDown(0)) // when we left click
+        if (Input.GetMouseButtonDown(0) && ammo > 0) // when we left click
         {
+            ammo--; // lower ammo
             GameObject newBullet = Instantiate(Bullet, shootPos.position, shootPos.rotation); // spawn the bullet
             newBullet.GetComponent<Rigidbody2D>().AddForce(shootPos.right * 10, ForceMode2D.Impulse); // apply force to bullet
         }
