@@ -31,7 +31,7 @@ public class Gun : MonoBehaviour
             player.localScale = new Vector3(-2f, 2f, 1);
             transform.localScale = new Vector3(-.2f, -.2f); // flip the gun when the player flips
         }
-        else
+        else if (angle != 90 || angle != -90)
         {
             player.localScale = new Vector3(2, 2, 1);
             transform.localScale = new Vector3(0.2f, .2f);

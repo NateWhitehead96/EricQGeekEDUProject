@@ -9,6 +9,7 @@ public class DoorScript : MonoBehaviour
     public SpriteRenderer sprite; // image of the door
     public Sprite openDoorSprite; // the sprite image we'll switch the door to
     public GameObject player;
+    public Animator fadeAnimation; // link to the fade canvas stuff
     // Start is called before the first frame update
     void Start()
     {
@@ -20,9 +21,18 @@ public class DoorScript : MonoBehaviour
     {
         if(inDoor == true && Input.GetKeyDown(KeyCode.E))
         {
-            player.transform.position = otherDoor.transform.position;
-            sprite.sprite = openDoorSprite;
+            StartCoroutine(OpenDoor());
         }
+    }
+
+    IEnumerator OpenDoor()
+    {
+        inDoor = false; // to stop spamming
+        sprite.sprite = openDoorSprite; // change how the door looks
+        fadeAnimation.SetBool("fading", true); // the thing should now fade to black
+        yield return new WaitForSeconds(1);
+        fadeAnimation.SetBool("fading", false); // the thing should unfade back to invisible
+        player.transform.position = otherDoor.transform.position; // teleport player
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

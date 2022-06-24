@@ -13,18 +13,37 @@ public class Player : MonoBehaviour
     public bool isRunning; // to know if the player is running/sprinting
 
     public Animator animator; // link to the animation controller
+
+    public GameObject Inventory; // access to showing and hiding our inventory
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // makes sure we link our rigidbody to rb
         animator = GetComponent<Animator>(); // make sure to link animator to this obejcts animator
+        Inventory.SetActive(false); // hiding inventory on start
     }
 
     // Update is called once per frame
     void Update()
     {
         Move(); // to allow the player to move
-        Jump(); // to all ow the player to jump
+        Jump(); // to allow the player to jump
+        ToggleInventory(); // allow player to open/close inventory
+    }
+
+    public void ToggleInventory()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (Inventory.activeInHierarchy) // if the inventory is on screen
+            {
+                Inventory.SetActive(false);
+            }
+            else // inventory is not on screen
+            {
+                Inventory.SetActive(true);
+            }
+        }
     }
 
     public void Move()
